@@ -29,6 +29,7 @@ type Configs struct {
 	ProjectLocation string `env:"project_location,dir"`
 	APKPathPattern  string `env:"apk_path_pattern"`
 	Variant         string `env:"variant,required"`
+	AppModule       string `env:"appModule,required"`
 	Module          string `env:"module,required"`
 	Arguments       string `env:"arguments"`
 	CacheLevel      string `env:"cache_level,opt[none,only_deps,all]"`
@@ -82,13 +83,13 @@ func exportArtifacts(artifacts []gradle.Artifact, deployDir string) ([]string, e
 	return paths, nil
 }
 
-func filterVariants(module, variant string, variantsMap gradle.Variants) (gradle.Variants, error) {
+func filterVariants(appModule, module, variant string, variantsMap gradle.Variants) (gradle.Variants, error) {
 	filteredVariants := gradle.Variants{}
 	var testVariant string
 	var appVariant string
 	for _, v := range variantsMap[module] {
 		if strings.ToLower(v) == strings.ToLower(variant) {
-			appVariant = v
+			appVariant = ":" + appModule + ":" + v
 		} else if strings.ToLower(v) == strings.ToLower(variant+testSuffix) {
 			testVariant = v
 		}
@@ -138,8 +139,7 @@ func mainE(config Configs) error {
 		return fmt.Errorf("Failed to open project, error: %s", err)
 	}
 
-	buildTask := gradleProject.
-		GetTask("assemble")
+	buildTask := gradleProject.GetTask("assemble")
 
 	log.Infof("Variants:")
 
@@ -153,7 +153,7 @@ func mainE(config Configs) error {
 		return fmt.Errorf("Failed to find variant pairs (build and AndroidTest variant), error: %s", err)
 	}
 
-	filteredVariants, err := filterVariants(config.Module, config.Variant, variants)
+	filteredVariants, err := filterVariants(config.AppModule, config.Module, config.Variant, variants)
 	if err != nil {
 		// List all the variants if there is an error
 		for module, variants := range variants {
