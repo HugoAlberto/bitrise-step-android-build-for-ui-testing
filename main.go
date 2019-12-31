@@ -29,7 +29,7 @@ type Configs struct {
 	ProjectLocation string `env:"project_location,dir"`
 	APKPathPattern  string `env:"apk_path_pattern"`
 	Variant         string `env:"variant,required"`
-	AppModule       string `env:"appModule,required"`
+	AppModule       string `env:"app_module,required"`
 	Module          string `env:"module,required"`
 	Arguments       string `env:"arguments"`
 	CacheLevel      string `env:"cache_level,opt[none,only_deps,all]"`
