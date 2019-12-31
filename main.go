@@ -89,7 +89,7 @@ func filterVariants(appModule, module, variant string, variantsMap gradle.Varian
 	var appVariant string
 	for _, v := range variantsMap[module] {
 		if strings.ToLower(v) == strings.ToLower(variant) {
-			appVariant = ":" + appModule + ":" + v
+			appVariant = v
 		} else if strings.ToLower(v) == strings.ToLower(variant+testSuffix) {
 			testVariant = v
 		}
@@ -103,7 +103,8 @@ func filterVariants(appModule, module, variant string, variantsMap gradle.Varian
 		return nil, fmt.Errorf("variant: %s not found in %s module", variant+testSuffix, module)
 	}
 
-	filteredVariants[module] = []string{appVariant, testVariant}
+	filteredVariants[module] = []string{testVariant}
+	filteredVariants[appModule] = []string{appVariant}
 	return filteredVariants, nil
 }
 
