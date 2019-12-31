@@ -28,7 +28,7 @@ inputs:
       summary: "The root directory of your android project, for example, where your root build gradle file exist (also gradlew, settings.gradle, etc...)"
       description: "The root directory of your android project, for example, where your root build gradle file exist (also gradlew, settings.gradle, etc...)"
       is_required: true
-  - appModule: ""
+  - app_module: ""
     opts:
       title: App Module
       summary: |
